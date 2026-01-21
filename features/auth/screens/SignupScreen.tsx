@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Logo } from '@/components/ui/Logo';
+import { GoogleLoginButton } from '../components/GoogleLoginButton';
 import { authApi } from '../services/auth.api';
 
 export function SignupScreen() {
@@ -88,6 +89,30 @@ export function SignupScreen() {
                     isLoading={isLoading}
                     className="rounded-lg"
                 />
+
+                <View className="mt-4">
+                    <GoogleLoginButton
+                        text="Sign up with Google"
+                        onSuccess={async (result: any) => {
+                            console.log('Google signup result:', result);
+                            if (result.type === 'success' && result.url) {
+                                try {
+                                    const match = result.url.match(/[?&]token=([^&]+)/);
+                                    if (match && match[1]) {
+                                        const token = match[1];
+                                        await authApi.setAccessToken(token);
+                                        router.replace('/(tabs)');
+                                    } else {
+                                        console.warn('No token found in redirect URL');
+                                    }
+                                } catch (e) {
+                                    console.error('Failed to handle Google signup', e);
+                                }
+                            }
+                        }}
+                        onError={(error: any) => console.log(error)}
+                    />
+                </View>
 
                 <View className="flex-row justify-center mt-6">
                     <Text className="text-gray-500">Already have an account? </Text>
