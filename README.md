@@ -1,50 +1,63 @@
-# Welcome to your Expo app 👋
+# Qline App Frontend
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile application for the Qline Queue Management System, built with **Expo**, **React Native**, and **NativeWind**.
 
-## Get started
+## 🚀 Features
 
-1. Install dependencies
+- **Authentication**:
+  - **Google OAuth**: Seamless "Continue with Google" flow using `expo-web-browser` and `expo-linking`.
+  - **Local Auth**: Email/Password login and signup.
+  - **Secure Storage**: Access tokens are securely stored on the device using `expo-secure-store`.
+  - **Automatic Session**: API requests automatically include the `Authorization: Bearer` header.
+- **UI/UX**:
+  - **NativeWind**: Utility-first styling with Tailwind CSS classes.
+  - **Modern Design**: Gradient branding, custom SVG logos, and polished components.
+  - **File-based Routing**: Navigation managed by `expo-router`.
 
+## 🛠️ Tech Stack
+
+- **Core**: [Expo](https://expo.dev/) (SDK 52), [React Native](https://reactnative.dev/)
+- **Navigation**: [Expo Router](https://docs.expo.dev/router/introduction/)
+- **Styling**: [NativeWind](https://www.nativewind.dev/) (Tailwind CSS for Native)
+- **Auth**: `expo-auth-session`, `expo-secure-store`
+- **Network**: Native `fetch` with auto-IP detection for backend connectivity.
+
+## 📦 Installation
+
+1. **Install Dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
-
-   ```bash
-   npx expo start
+2. **Environment Setup**
+   The app automatically detects your backend URL:
+   - **Physical Devices**: Attempts to connect to your computer's LAN IP via the Expo host configuration (must be on same Wi-Fi).
+   - **Android Emulator**: Defaults to `10.0.2.2`.
+   - **iOS Simulator**: Defaults to `localhost`.
+   
+   To override this, create a `.env` file (renaming `.env.example` if available) and set:
+   ```env
+   EXPO_PUBLIC_API_URL=http://YOUR_IP_ADDRESS:8000
    ```
 
-In the output, you'll find options to open the app in a
+## 📱 Running the App
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Start the development server:
 
 ```bash
-npm run reset-project
+npx expo start -c
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- Press `a` for Android Emulator.
+- Press `i` for iOS Simulator.
+- Scan the QR code with **Expo Go** on your physical device.
 
-## Learn more
+## 🔧 Key Configurations
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Deep Linking**: The app uses the `appfrontend://` scheme for OAuth redirects (e.g. `appfrontend://auth/callback`).
+- **Google Auth Flow**:
+  1. App opens system browser to Backend (`/auth/google`).
+  2. Backend redirects to Google.
+  3. Google redirects back to Backend (`/auth/google/callback`).
+  4. Backend parses state, sees mobile request, and redirects to `appfrontend://auth/callback?token=XYZ`.
+  5. App captures URL, extracts token, and saves it to SecureStore.
