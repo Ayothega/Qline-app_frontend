@@ -7,6 +7,7 @@ A mobile application for the Qline Queue Management System, built with **Expo**,
 - **Authentication**:
   - **Google OAuth**: Seamless "Continue with Google" flow using `expo-web-browser` and `expo-linking`.
   - **Local Auth**: Email/Password login and signup.
+  - **Password Reset**: Forgot password flow with email verification and secure password reset screens.
   - **Secure Storage**: Access tokens are securely stored on the device using `expo-secure-store`.
   - **Automatic Session**: API requests automatically include the `Authorization: Bearer` header.
 - **UI/UX**:
@@ -61,3 +62,35 @@ npx expo start -c
   3. Google redirects back to Backend (`/auth/google/callback`).
   4. Backend parses state, sees mobile request, and redirects to `appfrontend://auth/callback?token=XYZ`.
   5. App captures URL, extracts token, and saves it to SecureStore.
+
+- **Password Reset Flow**:
+  1. User taps "Forgot Password?" on login screen.
+  2. Enters email address in `ForgotPasswordScreen`.
+  3. Backend sends password reset email with unique token.
+  4. User opens email on device and taps reset link.
+  5. Link can either open in browser (web flow) or deep-link to `ResetPasswordScreen` with token parameter.
+  6. User enters new password and submits.
+  7. App navigates back to login with success confirmation.
+
+## 📂 Project Structure
+
+```
+app-frontend/
+├── app/                    # Expo Router file-based routing
+│   └── (auth)/             # Auth screens group
+│       ├── login.tsx
+│       ├── signup.tsx
+│       ├── forgot-password.tsx
+│       └── reset-password.tsx
+├── features/               # Feature modules
+│   └── auth/
+│       ├── components/     # Auth-specific components
+│       ├── screens/        # Screen components
+│       │   ├── LoginScreen.tsx
+│       │   ├── SignupScreen.tsx
+│       │   ├── ForgotPasswordScreen.tsx
+│       │   └── ResetPasswordScreen.tsx
+│       ├── services/       # API services
+│       └── types/          # TypeScript types
+└── components/             # Shared UI components
+```
